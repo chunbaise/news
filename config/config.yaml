@@ -1,0 +1,15 @@
+mysql:
+ host: 10.152.116.177
+ port: 3306
+ dbname: test
+ user: username
+ password: password:@tcp
+ charset: utf8
+
+redis:
+ host: 10.134.73.228
+ port: 6381
+ dbname: test
+ user: root
+ password: qwer1234
+ charset: utf8
