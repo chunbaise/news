@@ -20,10 +20,8 @@ type MySQL struct {
 type Redis struct {
 	Host     string `yaml:"host"`
 	Port     string `yaml:"port"`
-	Dbname   string `yaml:"dbname"`
-	User     string `yaml:"user"`
 	Password string `yaml:"password"`
-	Charset  string `yaml:"charset"`
+	DbIndex  string `yaml:"dbindex"`
 }
 type Conf struct {
 	MySQL

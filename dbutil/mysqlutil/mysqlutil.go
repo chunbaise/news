@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"news/config"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -11,9 +12,10 @@ import (
 var db *sql.DB
 
 func init() {
-	// confMySQL := config.C.MySQL
-	// strConn := confMySQL.User + ":" + confMySQL.Password + "(" + string(confMySQL.Host) + ":" + string(confMySQL.Port) + ")/" + string(confMySQL.Dbname) + "?charset=" + string(confMySQL.Charset)
-	strConn := "root:setest520123@tcp(10.142.116.177:3306)/test?charset=utf8"
+	confMySQL := config.C.MySQL
+	strConn := confMySQL.User + ":" + confMySQL.Password + "@tcp(" + confMySQL.Host + ":" + confMySQL.Port + ")/" + confMySQL.Dbname
+	strParameter := "?charset=" + confMySQL.Charset
+	strConn = strConn + strParameter
 	fmt.Println("Conn string: ", strConn)
 	db, _ = sql.Open("mysql", strConn)
 	db.SetMaxOpenConns(2000)
