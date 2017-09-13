@@ -1,9 +1,9 @@
 mysql:
- host: 10.152.116.177
+ host: 10.142.116.177
  port: 3306
  dbname: test
- user: username
- password: password:@tcp
+ user: root
+ password: setest520123:@tcp
  charset: utf8
 
 redis:
