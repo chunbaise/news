@@ -23,13 +23,14 @@ var once sync.Once
 var MaxIdle = 3
 var IdleTimeOut = time.Duration(240)
 
-func New(addr, password, db string) *Redis {
+func New(addr, port, password, db string) *Redis {
 	once.Do(func() {
 		pool := &redis.Pool{
 			MaxIdle:     MaxIdle,
 			IdleTimeout: IdleTimeOut * time.Second,
 
 			Dial: func() (redis.Conn, error) {
+				addr = addr + ":" + port
 				c, err := redis.Dial("tcp", addr) //ip + ":" + strconv.Itoa(port))
 				if err != nil {
 					return nil, err

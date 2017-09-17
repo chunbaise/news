@@ -1,7 +1,6 @@
 package test
 
 import (
-	"news/config"
 	. "news/dbutil/redisutil"
 	"testing"
 
@@ -9,10 +8,10 @@ import (
 )
 
 func TestRedis(t *testing.T) {
-	var err error
-	conf := config.C.Redis
+	// var err error
+	// conf := config.C.Redis
 
-	New(conf.Host+":"+conf.Port, conf.Password, conf.DbIndex)
+	// New(conf.Host+":"+conf.Port, conf.Password, conf.DbIndex)
 	r := GetInstance()
 
 	r.Do("FLUSHDB")

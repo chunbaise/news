@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"news/config"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -12,15 +11,15 @@ import (
 var db *sql.DB
 
 func init() {
-	confMySQL := config.C.MySQL
-	strConn := confMySQL.User + ":" + confMySQL.Password + "@tcp(" + confMySQL.Host + ":" + confMySQL.Port + ")/" + confMySQL.Dbname
-	strParameter := "?charset=" + confMySQL.Charset
-	strConn = strConn + strParameter
-	fmt.Println("Conn string: ", strConn)
-	db, _ = sql.Open("mysql", strConn)
-	db.SetMaxOpenConns(2000)
-	db.SetMaxIdleConns(1000)
-	db.Ping()
+	// confMySQL := config.C.MySQL
+	// strConn := confMySQL.User + ":" + confMySQL.Password + "@tcp(" + confMySQL.Host + ":" + confMySQL.Port + ")/" + confMySQL.Dbname
+	// strParameter := "?charset=" + confMySQL.Charset
+	// strConn = strConn + strParameter
+	// fmt.Println("Conn string: ", strConn)
+	// db, _ = sql.Open("mysql", strConn)
+	// db.SetMaxOpenConns(2000)
+	// db.SetMaxIdleConns(1000)
+	// db.Ping()
 }
 
 func Query(sql string) {

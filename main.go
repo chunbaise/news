@@ -1,19 +1,74 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"news/handles"
+	"news/httprouter"
+	"news/response"
+	"strconv"
 )
 
 func main() {
-	http.HandleFunc("/", getNews)
-	err := http.ListenAndServe(":80", nil)
+	router := httprouter.New()
+	router.GET("/", getNews)
+	router.GET("/detail", getDetail)
+	router.GET("/allids", getAllIds)
+	router.GET("/pageids", getPageIds)
+
+	err := http.ListenAndServe(":80", router)
 	if err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
 }
 
-func getNews(w http.ResponseWriter, r *http.Request) {
+func getNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Fprintf(w, "News Project")
+}
+
+func getPageIds(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	r.ParseForm()
+	page := r.Form["page"][0]
+	count := r.Form["count"][0]
+	SuccRespon := handles.GetIdByPageAndCount(page, count)
+	bytes, _ := json.Marshal(SuccRespon)
+	fmt.Fprintf(w, string(bytes))
+}
+
+func getAllIds(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	SuccRespon := handles.GetAllIds()
+	bytes, _ := json.Marshal(SuccRespon)
+	fmt.Fprintf(w, string(bytes))
+}
+
+func getDetail(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	r.ParseForm()
+	id := r.Form["id"][0]
+	if resp, ok := checkId(id); !ok {
+		bytes, _ := json.Marshal(resp)
+		fmt.Fprintf(w, string(bytes))
+		return
+	}
+	SuccRespon := handles.GetDetailById(id)
+	bytes, _ := json.Marshal(SuccRespon)
+	fmt.Fprintf(w, string(bytes))
+}
+
+func checkId(id string) (resp *response.ResponseMessage, ok bool) {
+	ok = false
+	// 输入为空
+	if id == "" {
+		resp = &response.ResponseMessage{Message: "Please Input Id.", Detail: "{}"}
+		return
+	}
+	intId, AtoiOk := strconv.Atoi(id)
+	// 转换失败（非数字、大于int等）或小于等于0
+	if AtoiOk != nil || intId <= 0 {
+		resp = &response.ResponseMessage{Message: "Please Input A Valid Id.", Detail: "{}"}
+		return
+	}
+	ok = true
+	return
 }

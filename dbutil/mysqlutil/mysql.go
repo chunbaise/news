@@ -101,7 +101,6 @@ func (this *DbMysql) Connect() error {
 		MysqlDbMap = make(map[string]*sql.DB)
 	}
 	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", this.useModel.User, this.useModel.Password, this.useModel.Host, this.useModel.Port, this.useModel.DBName)
-	fmt.Println("On Conn: ", dataSourceName)
 	if this.connectOnly(dataSourceName) {
 		// 用现有资源建立连接成功
 		return nil

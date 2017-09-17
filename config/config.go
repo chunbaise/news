@@ -8,7 +8,7 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-type MySQL struct {
+type MySQLNode struct {
 	Host     string `yaml:"host"`
 	Port     string `yaml:"port"`
 	Dbname   string `yaml:"dbname"`
@@ -17,15 +17,16 @@ type MySQL struct {
 	Charset  string `yaml:"charset"`
 }
 
-type Redis struct {
+type RedisNode struct {
 	Host     string `yaml:"host"`
 	Port     string `yaml:"port"`
 	Password string `yaml:"password"`
 	DbIndex  string `yaml:"dbindex"`
 }
+
 type Conf struct {
-	MySQL
-	Redis
+	MySQLNodes []MySQLNode `yaml:"mysql"`
+	RedisNodes []RedisNode `yaml:"redis"`
 }
 
 var C = new(Conf)
@@ -33,9 +34,9 @@ var C = new(Conf)
 var confiAbsPath = "config/config.yaml"
 
 func init() {
-	strProjectPath, _ := filepath.Abs("..")
+	strProjectPath, _ := filepath.Abs(".")
 	yamlFile, err := ioutil.ReadFile(filepath.Join(strProjectPath, "/", confiAbsPath))
-
+	// fmt.Println(string(yamlFile))
 	if err != nil {
 		log.Printf("YamlFile Parsing Failed: #%v ", err)
 	}
