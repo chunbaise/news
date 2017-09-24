@@ -15,6 +15,7 @@ import:
   subpackages:
   - unix
 - package: gopkg.in/yaml.v2
+- package: github.com/chunbaise/captcha
 testImport:
 - package: github.com/smartystreets/goconvey
   version: ~1.6.3

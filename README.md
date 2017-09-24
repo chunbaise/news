@@ -1,6 +1,6 @@
 # news project
 
-#### 一、项目使用
+#### 一、项目使用(已经添加了包管理工具，不需要单独安装)
 1. 安装MySQL数据库驱动
 ``` go
 go get github.com/go-sql-driver/mysql

@@ -1,6 +1,8 @@
-hash: 4c86e6961ecc080128d2921164510e9c4912291f2b4ef796dff6792572ccbf41
-updated: 2017-09-23T17:14:16.5466594+08:00
+hash: 312e9703eee50e488ac719a32d66adb7a5d2fb2feb5ba38409719c3537b81dab
+updated: 2017-09-24T11:13:51.320377+08:00
 imports:
+- name: github.com/chunbaise/captcha
+  version: 6a29415a8364ec2971fdc62d9e415ed53fc20410
 - name: github.com/garyburd/redigo
   version: 433969511232c397de61b1442f9fd49ec06ae9ba
   subpackages:
