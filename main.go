@@ -9,7 +9,10 @@ import (
 	"news/httprouter"
 	"news/response"
 	"strconv"
+	"sync"
 )
+
+var servers sync.WaitGroup
 
 func main() {
 	router := httprouter.New()
@@ -17,11 +20,30 @@ func main() {
 	router.GET("/detail", getDetail)
 	router.GET("/allids", getAllIds)
 	router.GET("/pageids", getPageIds)
+	servers.Add(1)
+	go func() {
+		defer servers.Done()
+		err := http.ListenAndServe(":8080", router)
+		if err != nil {
+			log.Fatal("ListenAndServe:", err)
+		}
+	}()
 
-	err := http.ListenAndServe(":80", router)
-	if err != nil {
-		log.Fatal("ListenAndServe:", err)
-	}
+	httpsRouter := httprouter.New()
+	httpsRouter.GET("/login", login)
+	servers.Add(1)
+	go func() {
+		defer servers.Done()
+		err := http.ListenAndServeTLS(":8082", "httpskey/server.crt", "httpskey/private.key", httpsRouter)
+		if err != nil {
+			log.Fatal("ListenAndServeTLS:", err)
+		}
+	}()
+	servers.Wait()
+}
+
+func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	fmt.Fprintf(w, "login")
 }
 
 func getNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
