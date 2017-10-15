@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"news/handles"
@@ -31,6 +32,7 @@ func main() {
 
 	httpsRouter := httprouter.New()
 	httpsRouter.GET("/login", login)
+	httpsRouter.POST("/registbydefault", registerByDefault)
 	servers.Add(1)
 	go func() {
 		defer servers.Done()
@@ -40,6 +42,23 @@ func main() {
 		}
 	}()
 	servers.Wait()
+}
+
+func registerByDefault(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	postBody, _ := ioutil.ReadAll(r.Body)
+	fmt.Println(string(postBody))
+	strPostBody := string(postBody)
+	var userInfo handles.UserInfo
+	json.Unmarshal([]byte(strPostBody), &userInfo)
+	fmt.Println(userInfo)
+	if handles.Register(&userInfo) {
+		return
+	} else {
+		resp := &response.ResponseMessage{Message: "Insert Error", Detail: "{}"}
+		bytes, _ := json.Marshal(resp)
+		fmt.Fprintf(w, string(bytes))
+	}
+	fmt.Fprintf(w, "registerByDefault")
 }
 
 func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {

@@ -798,7 +798,8 @@ func toString(data interface{}) map[string]string {
 		for i := 0; i < v.NumField(); i++ {
 			fv := v.Field(i)
 			ft := t.Field(i)
-			field := ft.Tag.Get("field")
+			field := ft.Name
+			fmt.Println("field", field)
 			if field != "" && field != "-" {
 				switch ft.Type.Kind() {
 				case reflect.Int, reflect.Int64, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:

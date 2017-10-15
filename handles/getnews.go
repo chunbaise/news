@@ -35,8 +35,6 @@ func init() {
 	cfgMysql := config.C.MySQLNodes[cfgMysqlIndex]
 	pMysql = mysqlutil.NewDb(cfgMysql.Host, cfgMysql.Port, cfgMysql.User, cfgMysql.Password, cfgMysql.Dbname)
 	pMysql.Connect()
-	// 默认用这个表, 用其它表请在其它地方更改
-	pMysql.SetTableName("news_info")
 }
 
 type Detail struct {
@@ -62,6 +60,7 @@ type IdListResponser struct {
 }
 
 func getDetailFromMysql(id string) (*Detail, bool) {
+	pMysql.SetTableName("news_info")
 	condition := pMysql.NewCondition()
 	condition.SetFilter("id", id)
 	row, err := pMysql.SetCondition(condition).FindOne()
@@ -127,6 +126,7 @@ func GetDetailById(id string) interface{} {
 }
 
 func getIdListFromMysql() (pIdlist []int, ok bool) {
+	pMysql.SetTableName("news_info")
 	ok = false
 	rows, err := pMysql.Select("id").FindAll()
 	if err != nil || rows == nil {
@@ -195,6 +195,7 @@ func GetAllIds() interface{} {
 }
 
 func getPageCountIdsFromMysql(page, count string) (pIdList []int, ok bool) {
+	pMysql.SetTableName("news_info")
 	ok = false
 	pager := pMysql.NewPager()
 	iCount, _ := strconv.Atoi(count)
