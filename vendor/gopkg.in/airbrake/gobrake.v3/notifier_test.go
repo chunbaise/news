@@ -61,7 +61,33 @@ var _ = Describe("Notifier", func() {
 		e := sentNotice.Errors[0]
 		Expect(e.Type).To(Equal("string"))
 		Expect(e.Message).To(Equal("hello"))
-		Expect(e.Backtrace[0].File).To(Equal("[PROJECT_ROOT]/github.com/airbrake/gobrake/notifier_test.go"))
+
+		frame := e.Backtrace[0]
+		Expect(frame.File).To(Equal("[PROJECT_ROOT]/github.com/airbrake/gobrake/notifier_test.go"))
+		Expect(frame.Line).To(Equal(30))
+		Expect(frame.Func).To(Equal("glob..func1.1"))
+		Expect(frame.Code[30]).To(Equal("\t\tnotifier.Notify(e, req)"))
+	})
+
+	It("reports error and backtrace when error is created with pkg/errors", func() {
+		err := foo()
+		notify(err, nil)
+		e := sentNotice.Errors[0]
+
+		Expect(e.Type).To(Equal("*errors.fundamental"))
+		Expect(e.Message).To(Equal("Test"))
+
+		frame := e.Backtrace[0]
+		Expect(frame.File).To(Equal("[PROJECT_ROOT]/github.com/airbrake/gobrake/pkgerrors_test.go"))
+		Expect(frame.Line).To(Equal(10))
+		Expect(frame.Func).To(Equal("bar"))
+		Expect(frame.Code[10]).To(Equal(`	return errors.New("Test")`))
+
+		frame = e.Backtrace[1]
+		Expect(frame.File).To(Equal("[PROJECT_ROOT]/github.com/airbrake/gobrake/pkgerrors_test.go"))
+		Expect(frame.Line).To(Equal(6))
+		Expect(frame.Func).To(Equal("foo"))
+		Expect(frame.Code[6]).To(Equal("\treturn bar()"))
 	})
 
 	It("reports context, env, session and params", func() {

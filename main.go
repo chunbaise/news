@@ -31,7 +31,7 @@ func main() {
 	}()
 
 	httpsRouter := httprouter.New()
-	httpsRouter.GET("/login", login)
+	httpsRouter.GET("/login/:name", login)
 	httpsRouter.POST("/registbydefault", registerByDefault)
 	servers.Add(1)
 	go func() {
@@ -61,8 +61,8 @@ func registerByDefault(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 	fmt.Fprintf(w, "registerByDefault")
 }
 
-func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	fmt.Fprintf(w, "login")
+func login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	fmt.Fprintf(w, "hello, %s!\n", ps.ByName("name"))
 }
 
 func getNews(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {

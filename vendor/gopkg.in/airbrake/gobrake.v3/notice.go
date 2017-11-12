@@ -44,6 +44,13 @@ type Error struct {
 	Backtrace []StackFrame `json:"backtrace"`
 }
 
+type StackFrame struct {
+	File string         `json:"file"`
+	Line int            `json:"line"`
+	Func string         `json:"function"`
+	Code map[int]string `json:"code,omitempty"`
+}
+
 type Notice struct {
 	Id    string // id returned by SendNotice
 	Error error  // error returned by SendNotice
@@ -69,11 +76,27 @@ func NewNotice(e interface{}, req *http.Request, depth int) *Notice {
 		return notice
 	}
 
+	typeName := getTypeName(e)
+	backtrace := getBacktrace(e, depth)
+
+	for i := range backtrace {
+		frame := &backtrace[i]
+		code, err := getCode(frame.File, frame.Line)
+		if err != nil {
+			if !os.IsNotExist(err) {
+				logger.Printf("getCode file=%q line=%d failed: %s",
+					frame.File, frame.Line, err)
+			}
+			continue
+		}
+		frame.Code = code
+	}
+
 	notice = &Notice{
 		Errors: []Error{{
-			Type:      fmt.Sprintf("%T", e),
+			Type:      typeName,
 			Message:   fmt.Sprint(e),
-			Backtrace: stack(depth),
+			Backtrace: backtrace,
 		}},
 		Context: make(map[string]interface{}),
 		Env:     make(map[string]interface{}),

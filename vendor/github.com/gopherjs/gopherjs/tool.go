@@ -115,10 +115,8 @@ func main() {
 							s.Watcher.Add(name)
 						}
 					}
-					if err := s.BuildFiles(args, pkgObj, currentDirectory); err != nil {
-						return err
-					}
-					return nil
+					err := s.BuildFiles(args, pkgObj, currentDirectory)
+					return err
 				}
 
 				// Expand import path patterns.
@@ -143,7 +141,7 @@ func main() {
 					}
 					if len(pkgs) == 1 { // Only consider writing output if single package specified.
 						if pkgObj == "" {
-							pkgObj = filepath.Base(pkg.ImportPath) + ".js"
+							pkgObj = filepath.Base(pkg.Dir) + ".js"
 						}
 						if pkg.IsCommand() && !pkg.UpToDate {
 							if err := s.WriteCommandPackage(archive, pkgObj); err != nil {
@@ -342,10 +340,7 @@ func main() {
 						}
 					}
 					_, err := s.BuildPackage(testPkg)
-					if err != nil {
-						return err
-					}
-					return nil
+					return err
 				}
 
 				if err := collectTests(&gbuild.PackageData{
