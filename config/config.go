@@ -1,12 +1,9 @@
 package config
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 	"path/filepath"
-	"strings"
 
 	yaml "gopkg.in/yaml.v2"
 )
@@ -34,12 +31,10 @@ type Conf struct {
 
 var C = new(Conf)
 
-var confiAbsPath = "src/news/config/config.yaml"
+var confiAbsPath = "config/config.yaml"
 
 func init() {
-	strProjectPath := os.Getenv("GOPATH")
-	strings.Replace(strProjectPath, "\\", "/", -1)
-	fmt.Println(strProjectPath)
+	strProjectPath, _ := filepath.Abs(".")
 	yamlFile, err := ioutil.ReadFile(filepath.Join(strProjectPath, "/", confiAbsPath))
 	// fmt.Println(string(yamlFile))
 	if err != nil {

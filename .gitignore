@@ -18,3 +18,5 @@
 
 debug
 *.tmp
+
+*.log
