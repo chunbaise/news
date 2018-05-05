@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func main() {
+func main15() {
 	r := gin.Default()
 	r.GET("/getcookie", PingHandler3)
 	r.POST("/postcookie", PostHandler3)
